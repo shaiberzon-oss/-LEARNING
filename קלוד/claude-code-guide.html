@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code — מדריך מלא לכולם</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --card: #111827;
+    --card2: #1a2235;
+    --accent: #6c63ff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --border: rgba(108,99,255,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Heebo', sans-serif;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a1040 50%, #0a1628 100%);
+    padding: 90px 40px 70px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,0.3) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(108,99,255,0.2);
+    border: 1px solid var(--accent);
+    color: #a78bfa;
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #00d4aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero p {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    max-width: 640px;
+    margin: 0 auto 12px;
+    position: relative;
+  }
+  .hero-sub {
+    font-size: 0.95rem;
+    color: #64748b;
+    position: relative;
+    margin-top: 8px;
+  }
+
+  /* ─── ORBS ─── */
+  .orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: 0.15;
+    animation: float 8s ease-in-out infinite;
+  }
+  .orb1 { width:400px;height:400px;background:var(--accent);top:-100px;left:-100px; }
+  .orb2 { width:300px;height:300px;background:var(--accent2);bottom:-50px;right:-50px;animation-delay:-4s; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+
+  /* ─── LAYOUT ─── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
+  .section { margin-bottom: 90px; }
+
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 10px;
+  }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .section-title { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 900; margin-bottom: 12px; }
+  .section-intro {
+    font-size: 1rem; color: #94a3b8; max-width: 800px;
+    margin-bottom: 32px; line-height: 1.9;
+  }
+  .section-intro strong { color: #cbd5e1; }
+
+  /* ─── ANALOGY BOX ─── */
+  .analogy {
+    background: linear-gradient(135deg, rgba(108,99,255,0.07), rgba(0,212,170,0.04));
+    border: 1px solid rgba(108,99,255,0.25);
+    border-right: 4px solid var(--accent);
+    border-radius: 0 14px 14px 0;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-size: 0.92rem;
+    color: #c4b5fd;
+    line-height: 1.8;
+  }
+  .analogy .ana-title { font-weight: 700; color: #a78bfa; margin-bottom: 6px; font-size: 0.85rem; letter-spacing: 1px; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 20px 60px rgba(108,99,255,0.12); }
+
+  /* ─── GRIDS ─── */
+  .grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:20px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px; }
+
+  /* ─── FLOW DIAGRAM ─── */
+  .flow {
+    display:flex; align-items:center; flex-wrap:wrap; gap:10px;
+    justify-content:center; padding:32px;
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    margin-bottom:28px;
+  }
+  .flow-step {
+    background:rgba(108,99,255,0.10);
+    border:1px solid rgba(108,99,255,0.35);
+    border-radius:16px; padding:16px 20px;
+    text-align:center; font-weight:600; min-width:130px;
+  }
+  .flow-step .emoji { font-size:2rem; display:block; margin-bottom:6px; }
+  .flow-step .flabel { font-size:0.78rem; color:#a78bfa; display:block; margin-bottom:4px; font-weight:700; letter-spacing:0.5px; }
+  .flow-step .fdesc  { font-size:0.82rem; color:#94a3b8; line-height:1.5; }
+  .flow-arrow { font-size:1.5rem; color:var(--accent); flex-shrink:0; }
+
+  /* ─── FEAT CARD ─── */
+  .feat-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:18px; padding:24px; position:relative; overflow:hidden;
+  }
+  .feat-card::before {
+    content:''; position:absolute; top:0; right:0;
+    width:80px; height:80px; border-radius:0 18px 0 80px; opacity:0.08;
+  }
+  .feat-card.purple::before { background:var(--accent); }
+  .feat-card.green::before  { background:var(--accent2); }
+  .feat-card.red::before    { background:var(--accent3); }
+  .feat-card.yellow::before { background:var(--accent4); }
+  .feat-card.blue::before   { background:#38bdf8; }
+
+  .feat-icon {
+    font-size:2rem; margin-bottom:12px; display:block;
+    width:56px; height:56px; line-height:56px; text-align:center; border-radius:14px;
+  }
+  .feat-icon.purple { background:rgba(108,99,255,0.15); }
+  .feat-icon.green  { background:rgba(0,212,170,0.15); }
+  .feat-icon.red    { background:rgba(255,107,107,0.15); }
+  .feat-icon.yellow { background:rgba(255,209,102,0.15); }
+  .feat-icon.blue   { background:rgba(56,189,248,0.15); }
+
+  .feat-card h3 { font-size:1.05rem; font-weight:700; margin-bottom:8px; }
+  .feat-card p  { font-size:0.88rem; color:#94a3b8; line-height:1.7; }
+  .feat-card .detail {
+    margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);
+    font-size:0.82rem; color:#64748b; line-height:1.7;
+  }
+
+  /* ─── TERM TOOLTIP ─── */
+  .term {
+    border-bottom: 1px dashed rgba(108,99,255,0.6);
+    color: #a78bfa; cursor: help; font-weight: 600;
+    position: relative;
+  }
+
+  /* ─── GLOSSARY ─── */
+  .glossary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+  .gloss-item {
+    background:var(--card2); border:1px solid var(--border); border-radius:14px; padding:18px 20px;
+  }
+  .gloss-term { font-weight:700; color:#a78bfa; font-size:0.95rem; margin-bottom:6px; }
+  .gloss-en   { font-size:0.78rem; color:#64748b; margin-bottom:8px; font-style:italic; }
+  .gloss-def  { font-size:0.85rem; color:#94a3b8; line-height:1.7; }
+
+  /* ─── MODES TABLE ─── */
+  .modes-table { width:100%; border-collapse:collapse; }
+  .modes-table th {
+    background:rgba(108,99,255,0.15); padding:14px 20px;
+    font-weight:700; font-size:0.9rem; border-bottom:2px solid var(--accent);
+    text-align:right;
+  }
+  .modes-table td { padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.88rem; vertical-align:top; }
+  .modes-table tr:last-child td { border-bottom:none; }
+  .modes-table tr:hover td { background:rgba(108,99,255,0.04); }
+  .modes-table .desc { color:#94a3b8; font-size:0.82rem; margin-top:4px; line-height:1.6; }
+
+  .badge {
+    display:inline-block; padding:3px 12px; border-radius:50px;
+    font-size:0.75rem; font-weight:700;
+  }
+  .badge-purple { background:rgba(108,99,255,0.2); color:#a78bfa; }
+  .badge-green  { background:rgba(0,212,170,0.2);  color:#34d399; }
+  .badge-yellow { background:rgba(255,209,102,0.2); color:#fbbf24; }
+  .badge-red    { background:rgba(255,107,107,0.2); color:#f87171; }
+
+  /* ─── CONTROL KEYS ─── */
+  .key-card {
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:20px 22px; display:flex; gap:18px; align-items:flex-start;
+  }
+  .key-btn {
+    background:rgba(108,99,255,0.15); border:1px solid rgba(108,99,255,0.4);
+    border-radius:10px; padding:8px 14px; font-family:'Courier New',monospace;
+    font-weight:700; font-size:0.9rem; flex-shrink:0; color:#a78bfa;
+    white-space:nowrap; min-width:80px; text-align:center; line-height:1.4;
+  }
+  .key-title { font-weight:700; margin-bottom:4px; font-size:0.95rem; }
+  .key-desc  { font-size:0.85rem; color:#94a3b8; line-height:1.7; }
+  .key-example { font-size:0.8rem; color:#64748b; margin-top:6px; font-style:italic; }
+
+  /* ─── HOOKS ─── */
+  .hook-flow {
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+    gap:16px; padding:28px;
+    background:var(--card2); border-radius:16px; margin-bottom:24px;
+  }
+  .hook-box {
+    background:var(--card); border-radius:14px;
+    padding:20px; border:1px solid var(--border);
+  }
+  .hook-box.bad  { border-color:rgba(255,107,107,0.4); }
+  .hook-box.good { border-color:rgba(0,212,170,0.4); }
+  .hook-box .title { font-weight:700; margin-bottom:12px; font-size:1rem; }
+  .hook-box .steps { font-size:0.85rem; color:#94a3b8; }
+  .hook-box .steps div { padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .hook-box .steps div:last-child { border-bottom:none; }
+  .hook-vs { font-size:1.4rem; font-weight:900; color:var(--accent); text-align:center; }
+
+  /* ─── LEVELS ─── */
+  .level-item {
+    display:flex; align-items:flex-start; gap:16px;
+    background:var(--card); border-radius:14px;
+    padding:18px 20px; border:1px solid var(--border);
+    margin-bottom:12px;
+  }
+  .level-emoji { font-size:1.8rem; flex-shrink:0; margin-top:2px; }
+  .level-item h4 { font-size:0.95rem; font-weight:700; margin-bottom:5px; }
+  .level-item p  { font-size:0.85rem; color:#94a3b8; line-height:1.7; }
+
+  /* ─── MCP GRID ─── */
+  .mcp-grid {
+    display:grid; grid-template-columns:1fr 50px 1fr; align-items:center; gap:16px;
+  }
+  .mcp-box { background:var(--card2); border:1px solid var(--border); border-radius:16px; padding:22px; }
+  .mcp-box h4 { font-weight:700; margin-bottom:12px; }
+  .mcp-box ul { list-style:none; font-size:0.86rem; color:#94a3b8; }
+  .mcp-box ul li { padding:5px 0; display:flex; gap:8px; align-items:flex-start; }
+  .mcp-box ul li::before { content:'›'; color:var(--accent); flex-shrink:0; font-weight:700; }
+  .mcp-plus { font-size:2rem; color:var(--accent); text-align:center; font-weight:900; }
+  .mcp-result {
+    background:linear-gradient(135deg,rgba(0,212,170,0.08),rgba(108,99,255,0.08));
+    border:1px solid rgba(0,212,170,0.3); border-radius:16px; padding:22px;
+  }
+
+  /* ─── GITHUB FLOW ─── */
+  .gh-flow {
+    background:var(--card); border-radius:20px;
+    border:1px solid var(--border); padding:36px;
+    display:flex; flex-direction:column; align-items:center; gap:0;
+  }
+  .gh-node {
+    background:var(--card2); border:1px solid var(--border);
+    border-radius:14px; padding:16px 28px;
+    font-weight:600; font-size:0.9rem; text-align:center;
+    min-width:260px;
+  }
+  .gh-node .sub { font-size:0.78rem; color:#64748b; margin-top:4px; font-weight:400; }
+  .gh-line { width:2px; height:28px; background:linear-gradient(var(--accent),var(--accent2)); }
+  .gh-split { display:flex; gap:24px; align-items:flex-start; }
+  .gh-branch { display:flex; flex-direction:column; align-items:center; }
+  .gh-hline  { height:2px; background:linear-gradient(var(--accent),var(--accent2)); width:80px; }
+
+  /* ─── SDK ─── */
+  .sdk-layer {
+    border-radius:12px; padding:16px 20px; font-size:0.9rem; font-weight:600;
+    display:flex; align-items:center; gap:14px; margin-bottom:8px;
+  }
+  .sdk-layer.base  { background:rgba(100,116,139,0.15); border:1px solid rgba(100,116,139,0.3); }
+  .sdk-layer.mid   { background:rgba(108,99,255,0.15);  border:1px solid rgba(108,99,255,0.35); }
+  .sdk-layer.top   { background:rgba(0,212,170,0.15);   border:1px solid rgba(0,212,170,0.35); color:#34d399; }
+  .sdk-layer .sdk-desc { font-size:0.82rem; color:#64748b; font-weight:400; margin-top:2px; }
+
+  /* ─── BIG QUOTE ─── */
+  .big-quote {
+    background:linear-gradient(135deg,rgba(108,99,255,0.1),rgba(0,212,170,0.05));
+    border:1px solid rgba(108,99,255,0.3); border-radius:20px; padding:48px; text-align:center;
+  }
+  .big-quote .q { font-size:clamp(1.1rem,2.5vw,1.4rem); font-weight:600; line-height:2; }
+  .big-quote .q span { color:#a78bfa; }
+
+  /* ─── STEP LIST ─── */
+  .step-list { display:flex; flex-direction:column; gap:10px; }
+  .step-item {
+    display:flex; gap:14px; align-items:flex-start;
+    background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:16px 18px;
+  }
+  .step-num {
+    background:linear-gradient(135deg,var(--accent),#8b5cf6);
+    color:white; font-weight:900; font-size:0.85rem;
+    width:32px; height:32px; border-radius:50%; display:flex;
+    align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;
+  }
+  .step-item h4 { font-size:0.92rem; font-weight:700; margin-bottom:4px; }
+  .step-item p  { font-size:0.84rem; color:#94a3b8; line-height:1.7; }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    border-radius:14px; padding:16px 20px; margin:16px 0; font-size:0.88rem; line-height:1.8;
+  }
+  .callout.info    { background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); color:#7dd3fc; }
+  .callout.warning { background:rgba(255,209,102,0.08); border:1px solid rgba(255,209,102,0.25); color:#fbbf24; }
+  .callout.success { background:rgba(0,212,170,0.08); border:1px solid rgba(0,212,170,0.25); color:#34d399; }
+  .callout strong  { font-weight:700; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    text-align:center; padding:60px 24px;
+    border-top:1px solid var(--border);
+    color:var(--muted); font-size:0.85rem;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider { height:1px; background:var(--border); margin:32px 0; }
+
+  @media (max-width:650px) {
+    .mcp-grid   { grid-template-columns:1fr; }
+    .hook-flow  { grid-template-columns:1fr; }
+    .flow       { flex-direction:column; }
+    .flow-arrow { transform:rotate(90deg); }
+    .gh-split   { flex-direction:column; align-items:center; }
+    .hero { padding:60px 20px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="orb orb1"></div><div class="orb orb2"></div>
+  <div class="hero-badge">מדריך מלא לכולם — ללא ידע טכני קודם</div>
+  <h1>Claude Code</h1>
+  <p>כל מה שצריך לדעת על עוזר ה-AI שכותב קוד — מוסבר בעברית פשוטה</p>
+  <div class="hero-sub">10 נושאים · מילון מונחים · אנלוגיות מהחיים</div>
+</div>
+
+<!-- ═══ CONTAINER ═══ -->
+<div class="container">
+
+<!-- ══════════════════════════════════════
+     01 — מה זה בכלל?
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">01 — ההתחלה</div>
+  <div class="section-title">🤖 מה זה Claude Code?</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 אנלוגיה מהחיים</div>
+    דמייני/י מזכיר/ה חכמה שיש לו/ה גישה לכל המסמכים במשרד שלך.
+    במקום שתסביר/י לו/לה כל פעם מה הפרויקט — הוא/היא כבר יודע/ת הכל, קורא/ת קבצים לבד,
+    מתקן/ת שגיאות, ומבצע/ת משימות בזמן שאתה/את עושה דברים אחרים.
+    Claude Code הוא בדיוק ככה — רק לקוד תוכנה.
+  </div>
+
+  <div class="section-intro">
+    <strong>Claude Code</strong> הוא כלי AI שרץ בתוך סביבת העבודה של המפתח.
+    בניגוד ל-ChatGPT הרגיל שרק <em>מדבר</em> איתך — Claude Code <em>פועל</em>:
+    הוא קורא קבצים אמיתיים במחשב, כותב קוד ושומר אותו, מריץ פקודות,
+    ובודק שהכל עובד — הכל בלי שתצטרך/י לעשות כלום בעצמך.
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="emoji">🗣️</span>
+      <span class="flabel">שלב 1 — אתה</span>
+      <span class="fdesc">מבקש/ת בשפה רגילה:<br>"תתקן את הבאג בדף ההתחברות"</span>
+    </div>
+    <div class="flow-arrow">←</div>
+    <div class="flow-step">
+      <span class="emoji">🔍</span>
+      <span class="flabel">שלב 2 — Claude מבין</span>
+      <span class="fdesc">קורא את הקבצים הרלוונטיים, מבין את מבנה הפרויקט</span>
+    </div>
+    <div class="flow-arrow">←</div>
+    <div class="flow-step">
+      <span class="emoji">🧠</span>
+      <span class="flabel">שלב 3 — Claude מתכנן</span>
+      <span class="fdesc">מגבש תוכנית פעולה לפני שנוגע בקוד</span>
+    </div>
+    <div class="flow-arrow">←</div>
+    <div class="flow-step">
+      <span class="emoji">⚙️</span>
+      <span class="flabel">שלב 4 — מבצע</span>
+      <span class="fdesc">עורך קבצים, מריץ בדיקות, מתקן שגיאות</span>
+    </div>
+    <div class="flow-arrow">←</div>
+    <div class="flow-step">
+      <span class="emoji">✅</span>
+      <span class="flabel">שלב 5 — מוכן!</span>
+      <span class="fdesc">הבעיה נפתרה, הקוד עובד, אפשר להמשיך</span>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>למה זה שונה מ-ChatGPT?</strong> ChatGPT מדבר — הוא נותן לך קוד לקרוא, ואתה צריך להדביק אותו בעצמך ולראות אם זה עובד.
+    Claude Code <em>פועל</em> — הוא נכנס ישירות לקבצים שלך, עורך, בודק, ומתקן. כמו ההבדל בין רופא שנותן לך עצה בטלפון לרופא שמגיע אליך הביתה ומטפל.
+  </div>
+
+  <div class="grid-4" style="margin-top:28px;">
+    <div class="feat-card purple">
+      <span class="feat-icon purple">📂</span>
+      <h3>קורא קבצים</h3>
+      <p>ניגש ישירות לקבצי הפרויקט שלך — לא צריך לספר לו מה יש בהם</p>
+      <div class="detail">כמו עובד שקרא את כל הדוחות לפני הפגישה</div>
+    </div>
+    <div class="feat-card green">
+      <span class="feat-icon green">✏️</span>
+      <h3>כותב ועורך קוד</h3>
+      <p>יוצר פיצ'רים חדשים, מתקן בעיות קיימות, ומשפר קוד ישן</p>
+      <div class="detail">כמו סופר שכותב, עורך ומוחק — הכל בעצמו</div>
+    </div>
+    <div class="feat-card red">
+      <span class="feat-icon red">▶️</span>
+      <h3>מריץ פקודות</h3>
+      <p>מפעיל בדיקות, מתקין תוספות, בונה את הפרויקט ובודק תוצאות</p>
+      <div class="detail">כמו מהנדס שבונה, בודק, ומתקן — סבב אחר סבב</div>
+    </div>
+    <div class="feat-card yellow">
+      <span class="feat-icon yellow">🔍</span>
+      <h3>חוקר ומגלה בעיות</h3>
+      <p>מזהה בעיות אבטחה, שגיאות לוגיקה וקוד כפול — לפני שמגיעים לבעיה</p>
+      <div class="detail">כמו מבקר פנימי שבודק הכל לפני הביקורת הרשמית</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     02 — דוגמאות אמיתיות
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">02 — הוכחות מהשטח</div>
+  <div class="section-title">⚡ מה הוא עשה בפועל?</div>
+
+  <div class="section-intro">
+    אלו לא דוגמאות מומצאות — אלו דברים שקרו באמת בחברות ופרויקטים אמיתיים.
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px;">
+
+    <div class="card" style="border-color:rgba(108,99,255,0.4);">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+        <span style="font-size:2.2rem;">📦</span>
+        <div>
+          <div style="font-weight:700;font-size:1rem;">שיפור ספרייה עם 429 מיליון הורדות</div>
+          <div style="font-size:0.8rem;color:var(--muted);">ספריית Chalk ל-JavaScript</div>
+        </div>
+      </div>
+      <p style="font-size:0.88rem;color:#94a3b8;margin-bottom:12px;line-height:1.8;">
+        ספרייה (Library) היא קוד שמפתחים משתמשים בו בתוך הפרויקטים שלהם — כמו תוסף לאקסל.
+        Claude קיבל גישה לקוד הזה, הריץ מדדי ביצועים (Benchmarks — בדיקות מהירות), מצא צווארי הבקבוק,
+        ושיפר את הביצועים כמעט פי ארבעה — בלי שאף אדם כתב שורה אחת.
+      </p>
+      <div style="background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.3);border-radius:14px;padding:20px;text-align:center;">
+        <div style="font-size:3rem;font-weight:900;color:#34d399;line-height:1;">390%</div>
+        <div style="font-size:0.85rem;color:#94a3b8;margin-top:4px;">שיפור ביצועים — אוטומטי לחלוטין</div>
+      </div>
+    </div>
+
+    <div class="card" style="border-color:rgba(255,107,107,0.4);">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+        <span style="font-size:2.2rem;">🔐</span>
+        <div>
+          <div style="font-weight:700;font-size:1rem;">עצר דליפת מידע לפני שקרתה</div>
+          <div style="font-size:0.8rem;color:var(--muted);">בדיקה אוטומטית של בקשת שינוי קוד</div>
+        </div>
+      </div>
+      <p style="font-size:0.88rem;color:#94a3b8;margin-bottom:12px;line-height:1.8;">
+        מפתח הוסיף לפונקציה שדה של "שם משתמש" כדי לעזור בדיבאג.
+        לא הבחין שאותה פונקציה שולחת את הנתונים לשותף חיצוני.
+        Claude בדק את בקשת השינוי, הבין את זרימת המידע בכל המערכת,
+        ועצר את הפרסום — <strong style="color:#f87171;">לפני</strong> שמידע אישי של משתמשים דלף החוצה.
+      </p>
+      <div style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:14px;padding:20px;text-align:center;">
+        <div style="font-size:1.3rem;font-weight:700;color:#f87171;">⚠️ מידע אישי בסיכון — נמנע!</div>
+        <div style="font-size:0.82rem;color:#94a3b8;margin-top:6px;">PII = Personal Identifiable Information = מידע מזהה אישי כמו שם, מייל, טלפון</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div style="font-size:1.8rem;margin-bottom:12px;">📊</div>
+      <h3 style="font-weight:700;margin-bottom:8px;">ניתוח נתונים בפלטפורמת סטרימינג</h3>
+      <p style="font-size:0.88rem;color:#94a3b8;line-height:1.8;">
+        Claude קיבל קובץ CSV (גיליון נתונים) עם מידע על לקוחות שביטלו מנוי.
+        פתח Jupyter Notebook (סביבת עבודה לניתוח נתונים), הריץ קוד Python שלב אחר שלב,
+        בחן את התוצאות, ושאל שאלות מעמיקות יותר בכל איטרציה —
+        בדיוק כמו אנליסט אנושי שעובד על בעיה.
+      </p>
+    </div>
+    <div class="card">
+      <div style="font-size:1.8rem;margin-bottom:12px;">🌐</div>
+      <h3 style="font-weight:700;margin-bottom:8px;">שיפור עיצוב אוטומטי</h3>
+      <p style="font-size:0.88rem;color:#94a3b8;line-height:1.8;">
+        עם כלי Playwright (כלי שמאפשר ל-Claude לשלוט בדפדפן),
+        Claude פתח את האתר, צילם מסך, בחן את העיצוב,
+        שינה את ה-CSS (קוד העיצוב), רענן — ובדק שוב.
+        חזר על זה עד שהעיצוב נראה טוב.
+        הכל בלי שאדם נגע בדפדפן.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     03 — הקשר וזיכרון
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">03 — זיכרון</div>
+  <div class="section-title">📋 איך Claude מכיר את הפרויקט שלך?</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 אנלוגיה</div>
+    דמייני/י שכרת/ת עובד חדש. בלי שום הכנה, הוא/היא לא יודע/ת כלום — "מה שפת התכנות?
+    מה שם בסיס הנתונים? מה הכללים שלנו?". עם קובץ CLAUDE.md — זה כמו לתת לו/לה
+    חוברת עובד מפורטת ביום הראשון. הוא/היא קורא/ת אותה פעם אחת ויודע/ת הכל מהרגע הראשון.
+  </div>
+
+  <div class="section-intro">
+    <strong>CLAUDE.md</strong> הוא קובץ טקסט פשוט שנמצא בתוך תיקיית הפרויקט.
+    Claude קורא אותו בתחילת כל שיחה — וכך "זוכר" מי אתה/את, מה הפרויקט, ומה הכללים.
+    אין צורך להסביר שוב ושוב.
+  </div>
+
+  <div class="grid-2" style="align-items:start;margin-bottom:24px;">
+
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span style="font-size:1.6rem;">📄</span>
+        <div style="font-weight:700;font-size:1rem;">דוגמה לקובץ CLAUDE.md</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.35);border-radius:12px;padding:18px;font-family:'Courier New',monospace;font-size:0.82rem;line-height:2;color:#e2e8f0;border:1px solid rgba(108,99,255,0.2);">
+        <span style="color:#64748b;"># מדריך לפרויקט "חנות האינטרנט"</span><br><br>
+        <span style="color:#34d399;">## שפת תכנות:</span> Python + FastAPI<br>
+        <span style="color:#34d399;">## בסיס נתונים:</span> PostgreSQL<br>
+        <span style="color:#34d399;">## שפת ממשק:</span> תמיד בעברית<br>
+        <span style="color:#34d399;">## כלל חשוב:</span> אל תיגע בקבצי prod/<br>
+        <span style="color:#34d399;">## בדיקות:</span> הרץ pytest לפני כל שמירה
+      </div>
+      <div class="callout info" style="margin-top:14px;">
+        <strong>Prod (פרודקשן)</strong> = הגרסה החיה של התוכנה שמשתמשים אמיתיים משתמשים בה.
+        שינוי בה ללא זהירות עלול לשבור את האתר לכולם.
+      </div>
+    </div>
+
+    <div>
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:16px;color:#a78bfa;">שלוש רמות הוראות לפרויקטים שונים:</div>
+      <div class="level-item">
+        <div class="level-emoji">🌍</div>
+        <div>
+          <h4>רמה גלובלית — כל המחשב</h4>
+          <p>הוראות שתקפות בכל פרויקט שתפתח/י.
+          לדוגמה: "תמיד כתוב הסברים בעברית" או
+          "אל תשתמש בפונקציות שמיושנות".
+          נשמר אצלך במחשב ולא עולה לאינטרנט.</p>
+        </div>
+      </div>
+      <div class="level-item">
+        <div class="level-emoji">📁</div>
+        <div>
+          <h4>רמת הפרויקט — לכל הצוות</h4>
+          <p>ה-CLAUDE.md שבתיקיית הפרויקט.
+          עולה ל-Git (מערכת שיתוף הקוד) יחד עם שאר הקוד —
+          כך כל מפתח בצוות שעובד עם Claude מקבל אותן הוראות
+          ואותו הקשר.</p>
+        </div>
+      </div>
+      <div class="level-item">
+        <div class="level-emoji">👤</div>
+        <div>
+          <h4>רמה אישית — רק לך</h4>
+          <p>העדפות אישיות שלך שאין צורך לשתף עם הצוות.
+          לדוגמה: "תמיד הצע לי שלוש אפשרויות לפני שבוחר/ת".
+          לא עולה לשרת — נשאר אצלך בלבד.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout success">
+    <strong>טיפ מתקדם:</strong> פקודת /init גורמת ל-Claude לסרוק את כל הפרויקט בפעם הראשונה
+    וליצור קובץ CLAUDE.md אוטומטי — כך שלא צריך לכתוב אותו מאפס!
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     04 — מצבי עבודה
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">04 — מצבי עבודה</div>
+  <div class="section-title">🎛️ מתי להשתמש באיזה מצב?</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 אנלוגיה</div>
+    כמו נהיגה: מהירות נסיעה רגילה מתאימה לדרך סלולה, אבל כשצריך לחצות הר
+    אתה עובר לארבע גלגלים. ככל שהמשימה מורכבת יותר — צריך מצב עוצמה גבוה יותר,
+    אבל גם צורך בדלק (טוקנים = עלות) גדול יותר.
+  </div>
+
+  <div class="card" style="overflow:hidden;padding:0;margin-bottom:20px;">
+    <table class="modes-table">
+      <thead>
+        <tr>
+          <th>מצב</th>
+          <th>רמה</th>
+          <th>מה Claude עושה?</th>
+          <th>מתי לבחור?</th>
+          <th>עלות</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>💬 רגיל</strong></td>
+          <td><span class="badge badge-green">בסיסי</span></td>
+          <td>
+            פועל מיד, בלי לתכנן יותר מדי
+            <div class="desc">מתאים כשהדרך ברורה</div>
+          </td>
+          <td>
+            תיקוני טקסט, שינוי צבע, תיקון שגיאה קטנה
+          </td>
+          <td style="color:#34d399;font-weight:700;">$ נמוכה</td>
+        </tr>
+        <tr>
+          <td><strong>🗺️ Plan Mode</strong></td>
+          <td><span class="badge badge-purple">רחב</span></td>
+          <td>
+            קורא הרבה קבצים, בונה תוכנית מפורטת — ורק אז מבצע
+            <div class="desc">כמו אדריכל שמציג שרטוטים לפני הבנייה</div>
+          </td>
+          <td>
+            הוספת פיצ'ר חדש שמשפיע על מספר מסכים,
+            שינויים שנוגעים ב-5+ קבצים שונים
+          </td>
+          <td style="color:#a78bfa;font-weight:700;">$$ בינונית</td>
+        </tr>
+        <tr>
+          <td><strong>🧠 Think Mode</strong></td>
+          <td><span class="badge badge-yellow">עמוק</span></td>
+          <td>
+            חושב לעומק על בעיה אחת — שוקל אפשרויות, מתנגד לעצמו, מגיע לפתרון מדויק
+            <div class="desc">כמו רופא שבוחן את כל האפשרויות לפני אבחנה</div>
+          </td>
+          <td>
+            באג שקיים שבועות ואף אחד לא מצא אותו,
+            לוגיקה עסקית מורכבת, חישובים שצריכים להיות מדויקים
+          </td>
+          <td style="color:#fbbf24;font-weight:700;">$$ בינונית</td>
+        </tr>
+        <tr>
+          <td><strong>🚀 Plan + Think</strong></td>
+          <td><span class="badge badge-red">מקסימום</span></td>
+          <td>
+            גם מתכנן לרוחב וגם חושב לעומק — הפתרון הכי מקיף
+            <div class="desc">כמו ייעוץ אסטרטגי מלא + תוכנית יישום</div>
+          </td>
+          <td>
+            ארכיטקטורה של מערכת חדשה, Refactor גדול
+            (= ארגון מחדש של כמות גדולה של קוד ישן)
+          </td>
+          <td style="color:#f87171;font-weight:700;">$$$ גבוהה</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warning">
+    <strong>מה זה "טוקנים"?</strong> ה-AI עובד על יחידות טקסט שנקראות "טוקנים" — כל מילה שווה בערך טוקן אחד.
+    ככל שהמשימה מורכבת יותר ו-Claude חושב יותר — הוא משתמש ביותר טוקנים, מה שמשפיע על העלות.
+    בפרויקטים קטנים זה לא משמעותי, אבל בפרויקטים גדולים כדאי להיות מודע/ת לכך.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     05 — שליטה בשיחה
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">05 — שליטה</div>
+  <div class="section-title">🎮 איך לשלוט בשיחה עם Claude?</div>
+
+  <div class="section-intro">
+    כשעובדים עם Claude לאורך זמן, השיחה מצטברת ועלולה להיות "רועשת" —
+    Claude זוכר דברים ישנים שכבר לא רלוונטיים. הכלים האלה עוזרים לנהל את זה.
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px;">
+
+    <div class="key-card">
+      <div class="key-btn">ESC</div>
+      <div>
+        <div class="key-title">עצור באמצע</div>
+        <div class="key-desc">
+          לוחצים פעם אחת כשרואים ש-Claude הולך לכיוון הלא נכון.
+          לא צריך לחכות שיסיים — אפשר לעצור מיד ולכוון אותו מחדש.
+        </div>
+        <div class="key-example">לדוגמה: Claude מתחיל לשכתב את כל המסד נתונים כשרצית רק לתקן שורה אחת — לחץ/י ESC ותדייק/י את הבקשה</div>
+      </div>
+    </div>
+
+    <div class="key-card">
+      <div class="key-btn">ESC<br>ESC</div>
+      <div>
+        <div class="key-title">חזור אחורה בזמן</div>
+        <div class="key-desc">
+          לחיצה כפולה מציגה את כל ההודעות הקודמות בשיחה, ואפשר לבחור
+          נקודת זמן קודמת לחזור אליה. כמו "undo" לשיחה שלמה —
+          Claude חוזר לאותה נקודה כאילו כל מה שאחריה לא קרה.
+        </div>
+        <div class="key-example">שימושי כשנכנסת לסבך — חוזרים לרגע שהכל עוד עבד</div>
+      </div>
+    </div>
+
+    <div class="key-card">
+      <div class="key-btn" style="color:#34d399;border-color:rgba(0,212,170,0.4);background:rgba(0,212,170,0.1);">/compact</div>
+      <div>
+        <div class="key-title">דחוס — שמור ידע, הסר רעש</div>
+        <div class="key-desc">
+          כשהשיחה ארוכה מאוד, Claude יכול לאבד פוקוס מדברים שנאמרו הרבה קודם.
+          הפקודה /compact מסכמת את כל השיחה הישנה לנקודות עיקריות —
+          Claude שומר את כל מה שלמד, אבל ה"זיכרון" מתפנה לפרטים החשובים.
+        </div>
+        <div class="key-example">כמו לסכם ישיבה ארוכה לפרוטוקול קצר — הידע נשמר, הרעש נעלם</div>
+      </div>
+    </div>
+
+    <div class="key-card">
+      <div class="key-btn" style="color:#f87171;border-color:rgba(255,107,107,0.4);background:rgba(255,107,107,0.1);">/clear</div>
+      <div>
+        <div class="key-title">מחק הכל ← התחל רענן</div>
+        <div class="key-desc">
+          מוחק את כל השיחה ומתחיל מאפס לגמרי. משתמשים בזה כשעוברים למשימה
+          חדשה שאין לה שום קשר למה שעשית עד כה — כדי ש-Claude לא יסתבך
+          מהקשר ישן שאינו רלוונטי.
+        </div>
+        <div class="key-example">גמרת עם הפרויקט A ועוברת לפרויקט B? תעשי /clear</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg,rgba(108,99,255,0.06),rgba(0,212,170,0.03));">
+    <div style="font-weight:700;margin-bottom:12px;font-size:0.95rem;">📸 טיפ: שימוש בצילומי מסך</div>
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;font-size:0.88rem;color:#94a3b8;line-height:1.8;">
+        אפשר לצלם את המסך שלך ולהדביק אותו ישירות לשיחה עם Claude.
+        כך במקום לתאר את הבעיה במילים — Claude רואה אותה ממש כמוך.
+        לדוגמה: "הכפתור הזה לא מיושר נכון" + צילום מסך → Claude מבין מיד מה הבעיה.
+      </div>
+      <div style="width:160px;height:100px;background:rgba(0,0,0,0.4);border-radius:12px;border:2px dashed rgba(108,99,255,0.4);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;flex-shrink:0;">
+        <div style="font-size:2.2rem;">🖼️</div>
+        <div style="font-size:0.73rem;color:#64748b;text-align:center;">Ctrl+V<br>להדבקה</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     06 — פקודות מותאמות
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">06 — אוטומציה</div>
+  <div class="section-title">⌨️ פקודות מותאמות אישית</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 אנלוגיה</div>
+    כמו מקרו ב-Excel — במקום לעשות 20 פעולות ידניות בכל פעם,
+    לוחצים על כפתור אחד שעושה הכל. בClaudeCode, כותבים קובץ הוראות פעם אחת —
+    ומקבלים פקודה חדשה שאפשר להשתמש בה שוב ושוב.
+  </div>
+
+  <div class="section-intro">
+    כל צוות פיתוח חוזר על אותן משימות שוב ושוב — בדיקת אבטחה, כתיבת טסטים, סקירת קוד.
+    פקודות מותאמות מאפשרות לאוטומט זאת: כותבים פעם אחת את ההוראות,
+    ומכאן ואילך — מקלידים פקודה אחת קצרה.
+  </div>
+
+  <div class="grid-2" style="align-items:start;margin-bottom:24px;">
+
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:14px;">איך זה עובד?</div>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div>
+            <h4>צור תיקיה מיוחדת</h4>
+            <p>תיקיה בשם <code style="color:#a78bfa;">.claude/commands/</code> בתוך הפרויקט שלך</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div>
+            <h4>כתוב קובץ הוראות</h4>
+            <p>קובץ טקסט פשוט ששמו יהיה שם הפקודה — למשל <code style="color:#a78bfa;">audit.md</code></p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div>
+            <h4>קבל פקודה חדשה</h4>
+            <p>מהרגע הזה, מקלידים <code style="color:#34d399;">/audit</code> וClaudeמריץ את כל ההוראות</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div>
+            <h4>אפשר גם להעביר פרמטרים</h4>
+            <p>לדוגמה: <code style="color:#34d399;">/audit login.py</code> — בודק רק את קובץ login.py</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="feat-card purple">
+        <span class="feat-icon purple">🔒</span>
+        <h3>/audit — בדיקת אבטחה</h3>
+        <p>סורק את כל התלויות (ספריות שהפרויקט משתמש בהן) ומחפש
+        פרצות אבטחה ידועות. כמו מהנדס אבטחה שבודק את כל הדלתות.</p>
+        <div class="detail">חוסך שעות של בדיקה ידנית, רץ בשניות</div>
+      </div>
+      <div class="feat-card green">
+        <span class="feat-icon green">🧪</span>
+        <h3>/test — יצירת טסטים</h3>
+        <p>יוצר אוטומטית בדיקות (Tests) לקוד החדש שנכתב.
+        טסט = בדיקה אוטומטית שמוודאת שהקוד עובד נכון לאחר כל שינוי.</p>
+        <div class="detail">כמו מעבדת איכות שבודקת כל מוצר לפני שיצא מהמפעל</div>
+      </div>
+      <div class="feat-card yellow">
+        <span class="feat-icon yellow">👁️</span>
+        <h3>/review — סקירת קוד</h3>
+        <p>בודק את כל השינויים לפני שהם עולים ל-Git.
+        מוצא בעיות סגנון, לוגיקה, ביצועים ואבטחה.</p>
+        <div class="detail">כמו עורך שקורא כתבה לפני הפרסום</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     07 — MCP Servers
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">07 — הרחבות</div>
+  <div class="section-title">🔌 MCP Servers — כוחות על</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 אנלוגיה</div>
+    Claude Code בסיסי הוא כמו סמארטפון "רגיל". MCP Servers הם כמו אפליקציות —
+    כל אחד מוסיף יכולות חדשות לגמרי. רוצה שClaudeיפתח דפדפן? יש אפליקציה לזה.
+    רוצה שיתחבר לבסיס הנתונים שלך? יש אפליקציה לזה. הרשימה אינסופית.
+  </div>
+
+  <div class="section-intro">
+    MCP Server (Model Context Protocol) = תוסף שמוסיף יכולות חדשות ל-Claude.
+    כל תוסף מחבר את Claude לכלי חיצוני — דפדפן, מסד נתונים, שירות ענן, ועוד.
+    הם רצים על המחשב המקומי שלך ולא שולחים מידע לשרתים חיצוניים.
+  </div>
+
+  <div class="mcp-grid card" style="margin-bottom:20px;">
+    <div class="mcp-box">
+      <h4>🤖 Claude ללא MCP</h4>
+      <ul>
+        <li>קורא ועורך קבצים טקסט</li>
+        <li>מריץ פקודות בטרמינל</li>
+        <li>חיפוש בקוד</li>
+        <li>עבודה עם Git</li>
+        <li>כתיבת וסידור קוד</li>
+      </ul>
+    </div>
+    <div class="mcp-plus">+</div>
+    <div class="mcp-result">
+      <h4 style="color:#34d399;">✨ Claude + MCP Servers</h4>
+      <ul style="list-style:none;font-size:0.86rem;color:#94a3b8;">
+        <li style="padding:5px 0;">🌐 שולט בדפדפן כמו אדם — לוחץ, גולל, ממלא טפסים</li>
+        <li style="padding:5px 0;">📸 מצלם מסך ומנתח עיצוב ויזואלי</li>
+        <li style="padding:5px 0;">🗄️ מתחבר ישירות לבסיסי נתונים</li>
+        <li style="padding:5px 0;">☁️ גישה ל-AWS, Google Cloud, Azure</li>
+        <li style="padding:5px 0;">💬 שולח הודעות Slack, Gmail</li>
+        <li style="padding:5px 0;">🔗 קורא ל-APIs חיצוניים</li>
+        <li style="padding:5px 0;">+ כל כלי שתרצה/י...</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg,rgba(0,212,170,0.05),rgba(108,99,255,0.05));">
+    <div style="font-weight:700;color:#34d399;margin-bottom:14px;">📖 דוגמה מלאה — Playwright MCP (שליטה בדפדפן):</div>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div><h4>Claude פותח דפדפן</h4><p>מנווט לאתר שלך — בדיוק כמו שאתה/את פותח/ת Chrome</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div><h4>מצלם ומנתח</h4><p>רואה את האתר ויזואלית ומבין מה לא נראה טוב</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div><h4>משפר את הקוד</h4><p>עורך את קוד ה-CSS (קוד העיצוב) של האתר</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div><h4>בודק שוב</h4><p>מרענן את הדפדפן ובוחן אם השיפור הצליח</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:linear-gradient(135deg,#34d399,#059669);">✓</div>
+        <div><h4 style="color:#34d399;">חוזר עד שהתוצאה מושלמת</h4><p>ללא התערבות אנושית — Claude לבדו מחזיר וממשיך עד שזה נראה טוב</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     08 — GitHub
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">08 — שיתוף פעולה</div>
+  <div class="section-title">🐙 Claude בתוך GitHub</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 מה זה GitHub בכלל?</div>
+    GitHub היא פלטפורמה שבה צוותי פיתוח שומרים ומשתפים קוד — כמו Google Drive אבל לקוד תוכנה.
+    כשמפתח רוצה להוסיף קוד חדש, הוא פותח "Pull Request" — בקשה לאחרים לבדוק ולאשר את השינויים שלו
+    לפני שהם נכנסים לגרסה הרשמית. Claude יכול להשתתף בתהליך הזה אוטומטית.
+  </div>
+
+  <div class="section-intro">
+    עם שילוב GitHub, Claude הופך לחבר צוות וירטואלי — הוא בודק כל שינוי קוד,
+    מגיב על הערות, ומבצע משימות שמבקשים ממנו בתוך הדיון.
+  </div>
+
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="gh-flow">
+      <div class="gh-node" style="background:rgba(108,99,255,0.1);border-color:rgba(108,99,255,0.4);">
+        👨‍💻 מפתח מגיש Pull Request
+        <div class="sub">= בקשה לאשר שינויי קוד חדשים</div>
+      </div>
+      <div class="gh-line"></div>
+      <div class="gh-node" style="background:rgba(0,212,170,0.1);border-color:rgba(0,212,170,0.4);">
+        🤖 Claude Code מתעורר אוטומטית
+        <div class="sub">ה-GitHub Action מפעיל אותו</div>
+      </div>
+      <div class="gh-line"></div>
+      <div class="gh-split">
+        <div class="gh-branch">
+          <div class="gh-hline"></div>
+          <div class="gh-node" style="min-width:180px;background:rgba(255,209,102,0.1);border-color:rgba(255,209,102,0.4);font-size:0.85rem;">
+            🔍 סוקר את הקוד
+            <div class="sub">מגיב בהערות</div>
+          </div>
+        </div>
+        <div class="gh-branch">
+          <div class="gh-hline"></div>
+          <div class="gh-node" style="min-width:180px;background:rgba(108,99,255,0.1);border-color:rgba(108,99,255,0.4);font-size:0.85rem;">
+            💬 עונה ל-@Claude
+            <div class="sub">ממלא בקשות מהתגובות</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="feat-card purple">
+        <span class="feat-icon purple">👁️</span>
+        <h3>סקירת קוד אוטומטית</h3>
+        <p>Claude קורא כל שורה של קוד חדש ומגיב בהערות — בדיוק כמו חבר צוות בכיר
+        שעושה "Code Review". הוא מחפש באגים, בעיות אבטחה, ושגיאות לוגיקה.</p>
+      </div>
+      <div class="feat-card green">
+        <span class="feat-icon green">💬</span>
+        <h3>מגיב לקריאות @Claude</h3>
+        <p>בכל issue (דיווח בעיה) או תגובה ב-GitHub, אפשר לכתוב @Claude ולבקש ממנו
+        לבצע משימה — Claude מבצע אותה ויוצר Pull Request עם השינויים.</p>
+      </div>
+      <div class="feat-card yellow">
+        <span class="feat-icon yellow">🔧</span>
+        <h3>GitHub Actions</h3>
+        <p>GitHub Actions = תהליכים אוטומטיים שרצים בענן. Claude רץ בתוכם —
+        לכן הוא פועל גם כשאתה/את לא ליד המחשב, 24/7, אוטומטית.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>דוגמה אמיתית:</strong> מפתח מוסיף שדה "email" לפונקציה שמציגה נתונים.
+    Claude בודק את כל ה-Pull Request, רואה שאותה פונקציה מחוברת לשותף חיצוני,
+    ומוסיף הערה: "⚠️ שדה זה חושף מידע אישי לשותף B — האם זה מכוון?"
+    — לפני שהקוד עלה לאוויר.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     09 — Hooks
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">09 — שומרי סף</div>
+  <div class="section-title">🪝 Hooks — חוקים אוטומטיים</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 אנלוגיה</div>
+    כמו מנגנון בטיחות במכונית: לפני שהמנוע מתניע — בודק שחגורת הבטיחות קשורה.
+    Hooks הם חוקים כאלה ל-Claude: "לפני שאתה עורך קובץ — הרץ בדיקת שגיאות"
+    או "אחרי שעשית שינוי — ודא שלא שכחת לעדכן את הטסטים".
+  </div>
+
+  <div class="section-intro">
+    Hook (ווו = "לתפוס") = פיסת קוד שרצה אוטומטית לפני או אחרי שClaudeמבצע פעולה.
+    הם מאפשרים להגדיר חוקים קשיחים שClaudeלא יכול לעקוף — גם אם שכח, גם אם ממוקד בדבר אחר.
+  </div>
+
+  <div class="hook-flow">
+    <div class="hook-box bad">
+      <div class="title" style="color:#f87171;">❌ בלי Hooks</div>
+      <div class="steps">
+        <div>1. Claude כותב פונקציה חדשה</div>
+        <div>2. שומר את הקובץ</div>
+        <div>3. ממשיך למשימה הבאה</div>
+        <div>4. 😬 יש שגיאות טיפוסים שאף אחד לא שם לב</div>
+        <div>5. הבעיה מתגלה בפרודקשן — לפני הלקוחות</div>
+      </div>
+    </div>
+    <div class="hook-vs">⚡</div>
+    <div class="hook-box good">
+      <div class="title" style="color:#34d399;">✅ עם Hooks</div>
+      <div class="steps">
+        <div>1. Claude כותב פונקציה חדשה</div>
+        <div>2. שומר את הקובץ</div>
+        <div>3. 🔍 Hook מריץ בדיקה אוטומטית</div>
+        <div>4. ❌ מצא שגיאה! שולח ל-Claude</div>
+        <div>5. ✅ Claude מתקן מיד — לפני שמישהו ראה</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="feat-card purple">
+      <span class="feat-icon purple">🔍</span>
+      <h3>Hook בדיקת שגיאות</h3>
+      <p>
+        <strong>מה זה שגיאות טיפוסים?</strong><br>
+        בשפות תכנות מסוימות (TypeScript, Java), כל משתנה מוגדר מה "סוג" הערך שלו —
+        מספר, טקסט, תאריך. כשClaude משנה פונקציה אבל שוכח לעדכן שימושים אחרים בה,
+        ה-Hook מגלה זאת מיד ומדווח לClaude לתקן.
+      </p>
+    </div>
+    <div class="feat-card red">
+      <span class="feat-icon red">🔒</span>
+      <h3>Hook הגנה על סודות</h3>
+      <p>
+        <strong>מה זה .env?</strong><br>
+        קובץ .env מכיל "מפתחות" לשירותים — כמו סיסמת המייל שלך, מפתח API לתשלומים,
+        ומפתח הגישה לבסיס הנתונים. Hook מונע מClaude לקרוא קובץ זה בטעות
+        ולחשוף את הסודות שלך.
+      </p>
+    </div>
+    <div class="feat-card green">
+      <span class="feat-icon green">🔄</span>
+      <h3>Hook מניעת כפילויות</h3>
+      <p>
+        כשClaude עמוס במשימה, הוא לפעמים כותב קוד שכבר קיים במקום אחר.
+        Hook זה שולח instance (עותק) נפרד של Claude לבדוק אם הקוד החדש
+        כבר קיים — ואם כן, עוצר ומכוון את Claude לשתמש בקיים.
+      </p>
+    </div>
+  </div>
+
+  <div class="callout warning" style="margin-top:20px;">
+    <strong>מתי Hooks רצים?</strong> יש שני סוגים:<br>
+    • <strong>לפני הפעולה (Pre-hook)</strong> — יכול לעצור את Claude לגמרי אם משהו לא בסדר<br>
+    • <strong>אחרי הפעולה (Post-hook)</strong> — רץ אחרי, יכול לתת משוב אבל לא יכול לבטל
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     10 — SDK
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">10 — שילוב מתקדם</div>
+  <div class="section-title">📦 SDK — Claude בתוך הקוד שלך</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 אנלוגיה</div>
+    בדרך כלל אתה/את מדבר/ת עם Claude דרך הטרמינל — כמו להתקשר לעורך דין ולבקש עצה.
+    SDK (Software Development Kit) = ערכת כלים שמאפשרת לך לגייס את עורך הדין
+    לתוך החברה שלך — הוא מוטמע בתהליכים ועובד אוטומטית, ללא שאלות.
+  </div>
+
+  <div class="section-intro">
+    SDK = ממשק תכנות שמאפשר לכתוב קוד שקורא ל-Claude מתוך התוכנה שלך.
+    Claude Code SDK זמין ב-Python, TypeScript, ו-CLI (שורת פקודה).
+    כשמשתמשים ב-SDK, Claude Code הופך ל"שכבה חכמה" בתוך הפרויקט.
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="sdk-layer base">
+      <span style="font-size:1.6rem;">🏗️</span>
+      <div>
+        <div>הפרויקט שלך — Python / TypeScript / Node.js</div>
+        <div class="sdk-desc">הקוד הרגיל שלך שרץ כרגיל</div>
+      </div>
+    </div>
+    <div class="sdk-layer mid">
+      <span style="font-size:1.6rem;">🤖</span>
+      <div>
+        <div>Claude Code SDK — AI מוטמע בתוך הקוד</div>
+        <div class="sdk-desc">הקוד שלך קורא ל-Claude, מעביר לו משימות, ומקבל תוצאות</div>
+      </div>
+    </div>
+    <div class="sdk-layer top">
+      <span style="font-size:1.6rem;">✨</span>
+      <div>
+        <div>תהליכים אוטומטיים חכמים — ללא התערבות</div>
+        <div class="sdk-desc" style="color:#6ee7b7;">Claude עובד בשקט ברקע, הפרויקט מרוויח מ-AI</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:18px;background:rgba(0,0,0,0.25);border-radius:12px;">
+      <div style="color:#34d399;font-weight:700;margin-bottom:12px;">דוגמאות שימוש אמיתיות:</div>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:0.86rem;color:#94a3b8;">
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <span style="color:#a78bfa;flex-shrink:0;">→</span>
+          <span><strong style="color:#cbd5e1;">בדיקת אבטחה לילית:</strong> כל לילה בשעה 3:00, הקוד שלך מפעיל Claude שסורק את כל הפרויקט ומדווח על בעיות</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <span style="color:#a78bfa;flex-shrink:0;">→</span>
+          <span><strong style="color:#cbd5e1;">תיעוד אוטומטי:</strong> בכל פעם שמפתח שומר קובץ, Claude כותב תיעוד (documentation) אוטומטית לכל פונקציה חדשה</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <span style="color:#a78bfa;flex-shrink:0;">→</span>
+          <span><strong style="color:#cbd5e1;">הוק לבדיקת כפילויות:</strong> הHook לזיהוי קוד כפול עצמו משתמש ב-SDK — מפעיל עותק נפרד של Claude כדי לבצע ניתוח</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>הרשאות ב-SDK:</strong> ברירת המחדל של ה-SDK היא "קריאה בלבד" — Claude יכול לקרוא ולחפש, אבל לא לשנות קבצים.
+    כדי לאפשר כתיבה, צריך להוסיף אישורים מפורשים ב-allowTools.
+    זה מגנה מפני שגיאות לא מכוונות בתהליכים אוטומטיים.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     מילון מונחים
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">מילון</div>
+  <div class="section-title">📖 מילון מונחים — כל המושגים בעברית פשוטה</div>
+  <div class="section-intro">כל הטרמינולוגיה הטכנית שהופיעה במדריך — עם הסבר פשוט ואנלוגיה.</div>
+
+  <div class="glossary-grid">
+
+    <div class="gloss-item">
+      <div class="gloss-term">🐛 באג</div>
+      <div class="gloss-en">Bug</div>
+      <div class="gloss-def">שגיאה בקוד שגורמת לתוכנה לא לעבוד כמצופה. כמו שגיאת כתיב במתכון שגורמת לעוגה לצאת לא טעימה.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🖥️ טרמינל / Command Line</div>
+      <div class="gloss-en">Terminal / CLI</div>
+      <div class="gloss-def">חלון שחור שמפתחים מקלידים בו פקודות טקסט. כמו לשלוח פקודות למחשב ישירות במילים, ללא עכבר.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">📂 Git</div>
+      <div class="gloss-en">Git Version Control</div>
+      <div class="gloss-def">מערכת שמנהלת גרסאות של הקוד. כמו Ctrl+Z אינסופי — שומרת את כל שינוי שנעשה, ואפשר לחזור לכל נקודה בהיסטוריה.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🐙 GitHub</div>
+      <div class="gloss-en">GitHub</div>
+      <div class="gloss-def">אתר שמאחסן קוד ומאפשר לצוותים לשתף פעולה — כמו Google Drive לקוד תוכנה, עם הרבה כלי שיתוף פעולה נוספים.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🔀 Pull Request</div>
+      <div class="gloss-en">Pull Request / PR</div>
+      <div class="gloss-def">בקשה לאשר שינויי קוד חדשים לפני שנכנסים לגרסה הרשמית. כמו שלחת מסמך לעמיתים לביקורת לפני שמגישים ללקוח.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🔗 API</div>
+      <div class="gloss-en">Application Programming Interface</div>
+      <div class="gloss-def">דרך שבה תוכנות "מדברות" זו עם זו. כמו מלצר שמעביר הזמנה למטבח — API מעביר בקשות בין שירותים שונים.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🔑 .env</div>
+      <div class="gloss-en">Environment Variables File</div>
+      <div class="gloss-def">קובץ שמכיל "מפתחות" סודיים — סיסמאות, קודי גישה לשירותים. לא מועלה לאינטרנט. כמו כספת עם קודי גישה.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🏭 פרודקשן</div>
+      <div class="gloss-en">Production</div>
+      <div class="gloss-def">הגרסה החיה של התוכנה שמשתמשים אמיתיים משתמשים בה עכשיו. שינוי לא נכון בה עלול לשבור את השירות לכולם.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🧪 טסטים</div>
+      <div class="gloss-en">Tests / Unit Tests</div>
+      <div class="gloss-def">בדיקות אוטומטיות שמריצים לוודא שהקוד עובד נכון. כמו בדיקת איכות בפס ייצור שמוודאת שכל מוצר תקין לפני שמגיע לחנות.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">📦 ספרייה / Library</div>
+      <div class="gloss-en">Library / Package</div>
+      <div class="gloss-def">קוד מוכן שמפתחים אחרים כתבו ואתה יכול להשתמש בו — כמו לקנות רהיטים מ-IKEA במקום לבנות מאפס.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🏎️ Benchmark</div>
+      <div class="gloss-en">Benchmark / Performance Test</div>
+      <div class="gloss-def">בדיקת מדידת ביצועים — מודדים כמה זמן לוקח לקוד לרוץ, ומה ניתן לשפר. כמו מבחן נסיעה לרכב.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">♻️ Refactor</div>
+      <div class="gloss-en">Refactoring</div>
+      <div class="gloss-def">ארגון מחדש של קוד קיים מבלי לשנות את מה שהוא עושה — כמו לסדר מחדש ארון בגדים: אותם בגדים, סדר טוב יותר.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">📜 TypeScript</div>
+      <div class="gloss-en">TypeScript</div>
+      <div class="gloss-def">גרסה "מחמירה" של JavaScript שמחייבת הגדרת סוג לכל משתנה. מונעת שגיאות נפוצות מראש — כמו אקסל עם ולידציה על כל תא.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🎬 GitHub Actions</div>
+      <div class="gloss-en">GitHub Actions / CI/CD</div>
+      <div class="gloss-def">תהליכים אוטומטיים שרצים בענן כשמתרחש אירוע (לדוגמה — העלאת קוד). כמו "אם" ב-Excel אבל לפעולות שרת.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">💰 טוקנים</div>
+      <div class="gloss-en">Tokens</div>
+      <div class="gloss-def">יחידות טקסט שה-AI מעבד — כל מילה שווה כ-1 טוקן. גם "מטבע" שמשפיע על עלות: יותר חשיבה = יותר טוקנים = יותר עלות.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🔐 PII</div>
+      <div class="gloss-en">Personally Identifiable Information</div>
+      <div class="gloss-def">מידע מזהה אישי — שם, כתובת, מייל, טלפון, ת.ז. חוקי פרטיות רבים (כמו GDPR) מחייבים הגנה מיוחדת עליו.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🧠 Extended Thinking</div>
+      <div class="gloss-en">Extended Thinking / Chain of Thought</div>
+      <div class="gloss-def">יכולת Claude לבלות זמן בחשיבה פנימית לפני שמגיב. אפשר לראות את תהליך החשיבה בזמן אמת. תוכן החשיבה נמחק מהקשר השיחה לאחר מכן.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">⚡ Effort Level</div>
+      <div class="gloss-en">Effort Level</div>
+      <div class="gloss-def">רמת המאמץ שClaude ישקיע בחשיבה: Low (נמוך), Medium (בינוני), High (גבוה). ככל שגבוה יותר — תוצאות טובות יותר, עלות גבוהה יותר.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🎯 Adaptive Thinking</div>
+      <div class="gloss-en">Adaptive Thinking</div>
+      <div class="gloss-def">התנהגות של Claude 4.6 ואילך: רמת המאמץ שמגדירים היא תקרה בלבד. Claude בוחר בעצמו כמה מאמץ להשקיע בכל בקשה — חוסך עלויות מיותרות.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🚧 Edge Case</div>
+      <div class="gloss-en">Edge Case</div>
+      <div class="gloss-def">מקרה קצה — מצב נדיר או קיצוני שיכול לקרות. לדוגמה: מה קורה אם המשתמש הכניס ספרה שלילית במקום חיובית? תוכנה טובה מטפלת בכל מקרי הקצה.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">🔊 Ultra Think</div>
+      <div class="gloss-en">Ultra Think</div>
+      <div class="gloss-def">מילת המפתח היחידה שמאלצת את Claude להשתמש בHighest effort level — "ultra think about this problem". שאר המילים כמו "think hard" אינן ממופות לרמה ספציפית.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     11 — Extended Thinking
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">11 — חשיבה מעמיקה</div>
+  <div class="section-title">🧠 Extended Thinking — חשיבה מורחבת</div>
+
+  <div class="analogy">
+    <div class="ana-title">💡 אנלוגיה</div>
+    דמייני/י שאת/ה שואל/ת עורך דין שאלה מורכבת.
+    יש שני מצבים: א) הוא עונה מיד מהאינסטינקט — מהיר, אבל לפעמים מפספס פרטים.
+    ב) הוא אומר "תן לי כמה דקות לחשוב" — יוצא, עושה מחקר, שוקל אפשרויות, ואז חוזר עם תשובה
+    מעמיקה ומדויקת הרבה יותר. Extended Thinking = האפשרות השנייה.
+  </div>
+
+  <div class="section-intro">
+    <strong>Extended Thinking</strong> = היכולת של Claude לבלות זמן בחשיבה פנימית לפני שהוא מגיב.
+    אפשר לראות את תהליך החשיבה הזה בזמן אמת — Claude "חושב בקול רם",
+    לפעמים אפילו מתקן את עצמו באמצע הדרך לפני שהוא מבצע פעולה.
+  </div>
+
+  <!-- מה קורה בפועל -->
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="card" style="border-color:rgba(0,212,170,0.35);">
+      <div style="font-weight:700;color:#34d399;margin-bottom:14px;font-size:1rem;">✅ עם Extended Thinking</div>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div><h4>מקבל את הבקשה שלך</h4><p>"תוסיף מערכת התראות לדשבורד עם טיפול בנתונים חסרים"</p></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div><h4>חושב לעומק — לפני שנוגע בקוד</h4><p>שוקל edge cases (מקרי קצה): מה קורה אם הנתון שלילי? מה אם חסר לגמרי? כיצד הגיוני להגיב?</p></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div><h4>אפשר לראות את המחשבות</h4><p>Claude "חושב בקול" — אפשר לפתוח ולראות בדיוק מה הוא שוקל ולמה</p></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:linear-gradient(135deg,#34d399,#059669);">✓</div>
+          <div><h4 style="color:#34d399;">מגיע לפתרון מקיף</h4><p>מתחשב בכל המקרים — תוצאה הרבה יותר טובה ואמינה</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border-color:rgba(255,107,107,0.35);">
+      <div style="font-weight:700;color:#f87171;margin-bottom:14px;font-size:1rem;">❌ בלי Extended Thinking</div>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(255,107,107,0.3);color:#f87171;">1</div>
+          <div><h4>מקבל את הבקשה שלך</h4><p>אותה בדיוק בקשה</p></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(255,107,107,0.3);color:#f87171;">2</div>
+          <div><h4>מגיב מיד — ללא חשיבה</h4><p>מהיר יותר, אבל עלול לפספס מקרי קצה וסיטואציות מורכבות</p></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(255,107,107,0.3);color:#f87171;">3</div>
+          <div><h4>תוצאה בסיסית</h4><p>לרוב עובדת לשימוש רגיל, אבל לא מתחשבת בבעיות נסתרות</p></div>
+        </div>
+      </div>
+      <div class="callout warning" style="margin-top:16px;">
+        <strong>מתי לכבות?</strong> כשצריך תשובה מהירה לשאלה פשוטה, ולא רוצים לחכות לתהליך חשיבה ארוך.
+      </div>
+    </div>
+  </div>
+
+  <!-- הפעלה/כיבוי -->
+  <div class="card" style="margin-bottom:20px;">
+    <div style="font-weight:700;font-size:1rem;margin-bottom:16px;">🔧 איך מפעילים / מכבים?</div>
+    <div class="grid-2">
+      <div>
+        <div style="font-size:0.9rem;color:#94a3b8;margin-bottom:12px;line-height:1.8;">
+          בתוך Claude Code מקלידים את המילה <code style="color:#a78bfa;">thinking</code> —
+          מופיעה אפשרות לכבות (disable) את יכולת החשיבה המורחבת.
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.35);border-radius:10px;padding:10px 16px;font-size:0.85rem;font-weight:700;color:#34d399;">
+            ✅ Thinking: מופעל<br>
+            <span style="font-weight:400;color:#64748b;font-size:0.78rem;">ברירת המחדל בכל המודלים</span>
+          </div>
+          <div style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.35);border-radius:10px;padding:10px 16px;font-size:0.85rem;font-weight:700;color:#f87171;">
+            ❌ Thinking: כבוי<br>
+            <span style="font-weight:400;color:#64748b;font-size:0.78rem;">פועל מהר יותר, פחות מעמיק</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.9rem;color:#94a3b8;margin-bottom:10px;">לשינוי מודל — מקלידים <code style="color:#a78bfa;">/model</code> ובוחרים:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:0.83rem;">
+          <div style="background:var(--card2);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;">
+            <span>Sonnet 4.6</span><span style="color:#64748b;">ברירת מחדל — מאוזן</span>
+          </div>
+          <div style="background:var(--card2);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;">
+            <span>Opus 4.6</span><span style="color:#64748b;">הכי חזק — לבעיות קשות</span>
+          </div>
+          <div style="background:var(--card2);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;">
+            <span>Haiku 4.5</span><span style="color:#64748b;">הכי מהיר — למשימות פשוטות</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Effort Levels -->
+  <div style="margin-bottom:24px;">
+    <div style="font-weight:700;font-size:1.05rem;margin-bottom:6px;">⚡ רמות מאמץ (Effort Levels)</div>
+    <div style="font-size:0.9rem;color:#94a3b8;margin-bottom:16px;line-height:1.8;">
+      אפשר להגיד ל-Claude <strong style="color:#cbd5e1;">כמה מאמץ</strong> להשקיע בחשיבה —
+      מקלידים <code style="color:#a78bfa;">effort</code> ובוחרים רמה. ככל שהרמה גבוהה יותר — יותר מעמיק, אבל גם יותר זמן ועלות.
+    </div>
+
+    <div class="card" style="overflow:hidden;padding:0;">
+      <table class="modes-table" style="width:100%;">
+        <thead>
+          <tr>
+            <th>רמת מאמץ</th>
+            <th>מה Claude עושה?</th>
+            <th>מתי לבחור?</th>
+            <th>עלות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🐢 <strong>Low</strong><br><span style="font-size:0.78rem;color:#64748b;">נמוך</span></td>
+            <td>חשיבה קצרה וממוקדת<div class="desc">בודק את הבסיס, לא שוקל מקרי קצה</div></td>
+            <td>תיקונים פשוטים, שינויי טקסט, שאלות ישירות</td>
+            <td style="color:#34d399;font-weight:700;">$ נמוכה</td>
+          </tr>
+          <tr>
+            <td>🚗 <strong>Medium</strong><br><span style="font-size:0.78rem;color:#64748b;">בינוני</span></td>
+            <td>חשיבה מאוזנת — שוקל כמה אפשרויות<div class="desc">מתחשב בתלויות ובמקרים נפוצים</div></td>
+            <td>פיצ'רים חדשים, תיקון באגים בינוניים, רוב המשימות היומיומיות</td>
+            <td style="color:#fbbf24;font-weight:700;">$$ בינונית</td>
+          </tr>
+          <tr>
+            <td>🚀 <strong>High</strong><br><span style="font-size:0.78rem;color:#64748b;">גבוה</span></td>
+            <td>חשיבה מעמיקה ומקיפה — שוקל הכל<div class="desc">edge cases, ביצועים, אבטחה, ארכיטקטורה</div></td>
+            <td>ארכיטקטורה של מערכת, באגים קשים, לוגיקה עסקית קריטית</td>
+            <td style="color:#f87171;font-weight:700;">$$$ גבוהה</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Adaptive Thinking -->
+  <div class="card" style="background:linear-gradient(135deg,rgba(108,99,255,0.06),rgba(0,212,170,0.04));margin-bottom:20px;border-color:rgba(108,99,255,0.35);">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <span style="font-size:2rem;">🎯</span>
+      <div>
+        <div style="font-weight:700;font-size:1rem;">Adaptive Thinking — חשיבה מסתגלת</div>
+        <div style="font-size:0.8rem;color:#64748b;">חדש ב-Claude Sonnet 4.6 ו-Opus 4.6</div>
+      </div>
+    </div>
+    <div style="font-size:0.9rem;color:#94a3b8;line-height:1.9;margin-bottom:14px;">
+      במודלים הכי עדכניים, <strong style="color:#cbd5e1;">רמת המאמץ שאתה מגדיר היא רק תקרה</strong> — לא חובה קבועה.
+      Claude עצמו מחליט כמה מאמץ נדרש לכל בקשה ובקשה בפני עצמה.
+    </div>
+    <div class="grid-2">
+      <div style="background:rgba(0,0,0,0.25);border-radius:12px;padding:16px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#a78bfa;margin-bottom:8px;">לדוגמה — הגדרת Medium:</div>
+        <div style="font-size:0.83rem;color:#94a3b8;line-height:1.8;">
+          • שאלה פשוטה → Claude משתמש ב-Low<br>
+          • פיצ'ר בינוני → Claude משתמש ב-Medium<br>
+          • לעולם לא יחרוג מ-Medium<br>
+          <span style="color:#34d399;">Claude בוחר בעצמו — חוסך עלויות מיותרות</span>
+        </div>
+      </div>
+      <div style="background:rgba(0,0,0,0.25);border-radius:12px;padding:16px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#a78bfa;margin-bottom:8px;">למה זה טוב?</div>
+        <div style="font-size:0.83rem;color:#94a3b8;line-height:1.8;">
+          • לא מבזבז טוקנים יקרים על שאלות פשוטות<br>
+          • לא "חוסך" חשיבה כשהמשימה באמת מורכבת<br>
+          • אתה שולט בתקרה — Claude שולט ביישום
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Planning vs Thinking -->
+  <div style="margin-bottom:20px;">
+    <div style="font-weight:700;font-size:1.05rem;margin-bottom:6px;">🤔 מה ההבדל בין Planning לבין Thinking?</div>
+    <div style="font-size:0.9rem;color:#94a3b8;margin-bottom:16px;">
+      שאלה שמבלבלת הרבה אנשים — הנה ההסבר הפשוט:
+    </div>
+    <div class="hook-flow">
+      <div class="hook-box" style="border-color:rgba(108,99,255,0.4);">
+        <div class="title" style="color:#a78bfa;">🗺️ Planning (תכנון)</div>
+        <div class="steps" style="text-align:right;">
+          <div><strong>למה:</strong> משימות שמשפיעות על הרבה קבצים</div>
+          <div><strong>מה עושה:</strong> בונה רשימת מטלות מסודרת, מגדיר סדר פעולות</div>
+          <div><strong>דוגמה:</strong> "שנה את פורמט התאריך בכל האתר" — נוגע ב-20 קבצים, צריך סדר</div>
+          <div style="color:#a78bfa;margin-top:6px;">= רוחב · ניהול תהליך מורכב</div>
+        </div>
+      </div>
+      <div class="hook-vs">VS</div>
+      <div class="hook-box" style="border-color:rgba(0,212,170,0.4);">
+        <div class="title" style="color:#34d399;">🧠 Thinking (חשיבה)</div>
+        <div class="steps" style="text-align:right;">
+          <div><strong>למה:</strong> גם משימות קטנות עם לוגיקה מורכבת</div>
+          <div><strong>מה עושה:</strong> שוקל עומק, שיקולים, אפשרויות, edge cases</div>
+          <div><strong>דוגמה:</strong> "הוסף מערכת תגובות" — קובץ אחד, אבל דורש חשיבה על DB, ביטחון, ביצועים</div>
+          <div style="color:#34d399;margin-top:6px;">= עומק · פתרון בעיה מורכבת</div>
+        </div>
+      </div>
+    </div>
+    <div class="callout success" style="margin-top:14px;">
+      <strong>🏆 המלצה:</strong> למשימות מורכבות — השתמש בשניהם יחד! Planning לארגון הסדר, Thinking לעומק הפתרון.
+    </div>
+  </div>
+
+  <!-- מילות מפתח -->
+  <div class="card">
+    <div style="font-weight:700;font-size:1rem;margin-bottom:14px;">🗣️ מילות מפתח שעובדות — ושלא עובדות</div>
+    <div class="grid-2">
+      <div>
+        <div style="font-size:0.85rem;color:#94a3b8;margin-bottom:12px;line-height:1.8;">
+          יש אנשים שמנסים להגיד ל-Claude "think hard" או "think more"
+          כדי לשנות את רמת המאמץ. <strong style="color:#f87171;">לפי התיעוד הרשמי — זה לא ממופה לאפורט מסוים.</strong>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.25);border-radius:10px;padding:10px 14px;font-size:0.83rem;">
+            <div style="color:#f87171;font-weight:700;margin-bottom:3px;">⚠️ לא מבטיח effort level:</div>
+            <div style="color:#94a3b8;">"think", "think hard", "think more", "think carefully"</div>
+            <div style="color:#64748b;font-size:0.78rem;margin-top:4px;">Claude עשוי לחשוב — אבל לא בהכרח ב-High effort</div>
+          </div>
+          <div style="background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.25);border-radius:10px;padding:10px 14px;font-size:0.83rem;">
+            <div style="color:#34d399;font-weight:700;margin-bottom:3px;">✅ מפעיל High effort בפועל:</div>
+            <div style="color:#94a3b8;">"ultra think about this problem"</div>
+            <div style="color:#64748b;font-size:0.78rem;margin-top:4px;">המילה "ultra" — הכלל היחיד שמאלץ את הרמה הגבוהה ביותר</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(0,0,0,0.25);border-radius:14px;padding:18px;">
+        <div style="font-size:0.83rem;font-weight:700;color:#a78bfa;margin-bottom:10px;">📖 דוגמה לשימוש נכון:</div>
+        <div style="background:rgba(0,0,0,0.4);border-radius:8px;padding:12px;font-family:'Courier New',monospace;font-size:0.8rem;color:#e2e8f0;line-height:2;">
+          <span style="color:#64748b;"># הכי חזק — Ultra Think:</span><br>
+          "ultra think about the following<br>
+          &nbsp;problem and help me solve it:<br>
+          &nbsp;[תיאור הבעיה]"<br><br>
+          <span style="color:#64748b;"># הגדרת תקרה עם effort:</span><br>
+          effort → high → אז שאל את השאלה
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- טוקנים נמחקים -->
+  <div class="callout success" style="margin-top:20px;">
+    <strong>💡 יתרון חשוב שלא כולם יודעים:</strong> כל תוכן החשיבה הפנימית של Claude (ה-Thinking)
+    <strong>נמחק אוטומטית</strong> מהקשר השיחה ברגע שהוא הגיע למסקנה.
+    כלומר — Claude חושב לעומק, אבל "הזיכרון" של השיחה לא מתמלא בחשיבה הזו.
+    זה שומר על הקשר נקי ויעיל, וחוסך טוקנים לטווח הארוך.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     סיכום
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="big-quote">
+    <div style="font-size:3rem;margin-bottom:20px;">🧠</div>
+    <div class="q">
+      Claude Code הוא <span>עוזר AI שפועל</span> — לא רק מדבר.<br>
+      הוא קורא קבצים, כותב קוד, מריץ בדיקות ומתקן שגיאות <span>לבדו</span>.<br>
+      אפשר ללמד אותו את כללי הפרויקט שלך, להרחיב אותו בכלים,<br>
+      לשלב אותו ב-GitHub, ולגרום לו לעבוד <span>24 שעות ביממה בשבילך</span>.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     מפת הידע
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">סיכום</div>
+  <div class="section-title">🗺️ מפת הנושאים — הכל במבט אחד</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;">
+    <div style="background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.25);border-radius:16px;padding:20px;">
+      <div style="font-weight:700;color:#a78bfa;margin-bottom:12px;font-size:1rem;">📚 הקשר וזיכרון</div>
+      <div style="font-size:0.85rem;color:#94a3b8;line-height:2;">
+        CLAUDE.md — "חוברת העובד" של Claude<br>
+        @ — מציין קובץ ספציפי להתמקד בו<br>
+        3 רמות — גלובלי, פרויקט, אישי<br>
+        /init — יוצר CLAUDE.md אוטומטית
+      </div>
+    </div>
+    <div style="background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.25);border-radius:16px;padding:20px;">
+      <div style="font-weight:700;color:#34d399;margin-bottom:12px;font-size:1rem;">⚡ מצבי עבודה</div>
+      <div style="font-size:0.85rem;color:#94a3b8;line-height:2;">
+        רגיל → שינויים קטנים ומהירים<br>
+        Plan Mode → פיצ'רים שמשפיעים על הרבה<br>
+        Think Mode → בעיות לוגיקה עמוקות<br>
+        שניהם יחד → ארכיטקטורה ומשימות ענק
+      </div>
+    </div>
+    <div style="background:rgba(255,209,102,0.08);border:1px solid rgba(255,209,102,0.25);border-radius:16px;padding:20px;">
+      <div style="font-weight:700;color:#fbbf24;margin-bottom:12px;font-size:1rem;">🎮 שליטה בשיחה</div>
+      <div style="font-size:0.85rem;color:#94a3b8;line-height:2;">
+        ESC → עצור באמצע<br>
+        ESC×2 → חזור אחורה בזמן<br>
+        /compact → קצר את ההיסטוריה<br>
+        /clear → התחל שיחה חדשה לגמרי
+      </div>
+    </div>
+    <div style="background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.25);border-radius:16px;padding:20px;">
+      <div style="font-weight:700;color:#f87171;margin-bottom:12px;font-size:1rem;">🔌 הרחבות ואוטומציה</div>
+      <div style="font-size:0.85rem;color:#94a3b8;line-height:2;">
+        MCP Servers → כלים חיצוניים (דפדפן, DB)<br>
+        GitHub Actions → עבודה אוטומטית בענן<br>
+        SDK → Claude מוטמע בתוך הקוד שלך<br>
+        Hooks → חוקי בטיחות אוטומטיים
+      </div>
+    </div>
+    <div style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);border-radius:16px;padding:20px;">
+      <div style="font-weight:700;color:#38bdf8;margin-bottom:12px;font-size:1rem;">⌨️ פקודות מותאמות</div>
+      <div style="font-size:0.85rem;color:#94a3b8;line-height:2;">
+        קובץ הוראות → פקודה חדשה<br>
+        /audit → בדיקת אבטחה אוטומטית<br>
+        /test → יצירת טסטים<br>
+        /review → סקירה לפני Git commit
+      </div>
+    </div>
+    <div style="background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25);border-radius:16px;padding:20px;">
+      <div style="font-weight:700;color:#c084fc;margin-bottom:12px;font-size:1rem;">📖 מונחים חשובים</div>
+      <div style="font-size:0.85rem;color:#94a3b8;line-height:2;">
+        Git/GitHub → שמירה ושיתוף קוד<br>
+        Pull Request → בקשת אישור שינויים<br>
+        Prod → גרסה חיה של התוכנה<br>
+        Tokens → "מטבע" של ה-AI
+      </div>
+    </div>
+    <div style="background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.25);border-radius:16px;padding:20px;">
+      <div style="font-weight:700;color:#34d399;margin-bottom:12px;font-size:1rem;">🧠 Extended Thinking</div>
+      <div style="font-size:0.85rem;color:#94a3b8;line-height:2;">
+        מופעל ← ברירת מחדל בכל המודלים<br>
+        Low / Medium / High ← רמות מאמץ<br>
+        Adaptive ← Claude בוחר בעצמו (4.6)<br>
+        "ultra think" ← מאלץ High effort<br>
+        החשיבה ← נמחקת מהקשר לאחר מכן
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <div style="font-size:1.8rem;margin-bottom:12px;">🤖</div>
+  <div style="font-weight:700;font-size:1rem;margin-bottom:6px;">Claude Code — מדריך מלא לכולם</div>
+  <div style="margin-bottom:4px;">נוצר עם Claude Sonnet 4.6</div>
+  <div>2026 · ללא ידע טכני קודם נדרש</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Hub</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <h1>🧠 Knowledge Hub</h1>
+  <div class="search-bar">
+    <span class="icon">🔍</span>
+    <input id="searchInput" type="text" placeholder="Search your knowledge…">
+  </div>
+  <div class="header-actions">
+    <button class="btn-ghost" id="btnImport">⬆ Import</button>
+    <button class="btn-ghost" id="btnSettings" onclick="openSettings()">⚙ Settings</button>
+    <button class="btn-primary" id="btnSummarizeAll" onclick="summarizeAll()">✨ AI Summarize All</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside>
+    <div class="sidebar-section">Sources</div>
+    <div id="sidebarSources"></div>
+    <div class="sidebar-section">Domains</div>
+    <div id="sidebarDomains"></div>
+  </aside>
+
+  <!-- Main -->
+  <main>
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="num" id="statTotal">–</div>
+        <div class="label">Total items</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statSummarized">–</div>
+        <div class="label">AI summarized</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statSources">–</div>
+        <div class="label">Connected sources</div>
+      </div>
+    </div>
+
+    <!-- Import panel (hidden by default) -->
+    <div id="importPanel" style="display:none" class="import-panel">
+      <div class="import-tabs">
+        <button class="import-tab active" data-tab="youtube">▶ YouTube</button>
+        <button class="import-tab" data-tab="twitter">𝕏 Twitter</button>
+        <button class="import-tab" data-tab="reddit">🤖 Reddit</button>
+        <button class="import-tab" data-tab="linkedin">in LinkedIn</button>
+        <button class="import-tab" data-tab="photos">📷 Photos</button>
+        <button class="import-tab" data-tab="chatgpt">💬 ChatGPT</button>
+        <button class="import-tab" data-tab="claude">✦ Claude</button>
+        <button class="import-tab" data-tab="manual">✏ Manual</button>
+      </div>
+
+      <div class="import-content">
+
+        <!-- YouTube -->
+        <div id="import-youtube" class="import-section active">
+          <div class="instructions">
+            <strong>📋 Step 1 — Get a YouTube API Key (once):</strong><br>
+            Go to <em>console.cloud.google.com</em> → Create project → APIs &amp; Services → Enable "YouTube Data API v3" → Credentials → Create API Key.<br>
+            Then paste the key in <strong>⚙ Settings</strong> above and save.<br><br>
+            <strong>📋 Step 2 — Find your playlist:</strong><br>
+            Enter your YouTube <strong>Channel ID</strong> (starts with UC…) or any search term, then click <em>Browse Playlists</em> to see available playlists. Or paste a Playlist ID directly if you already have it.
+          </div>
+          <form id="yt-form">
+            <div class="input-group">
+              <label>Channel ID or search (e.g. UCxxxxxx or "my channel name")</label>
+              <div style="display:flex;gap:8px">
+                <input id="yt-channel" type="text" placeholder="UCxxxxxx or search term" style="flex:1">
+                <button type="button" class="btn-ghost" id="btnBrowsePlaylists">Browse Playlists</button>
+              </div>
+            </div>
+            <div id="playlistBrowser" style="display:none">
+              <div id="playlistList" class="playlist-list"></div>
+            </div>
+            <div class="input-group">
+              <label>Playlist ID <span style="color:var(--muted)">(auto-filled when you pick above, or paste directly)</span></label>
+              <input id="yt-playlist-id" type="text" placeholder="e.g. PLrAXtmErZgOeiKm4sgNOknc9TTnJHKy3Y">
+            </div>
+            <div class="input-group" style="margin-bottom:0">
+              <label>YouTube API Key <span style="color:var(--muted)">(optional — overrides key from Settings)</span></label>
+              <input id="yt-api-key" type="text" placeholder="AIza…">
+            </div>
+            <br>
+            <button type="submit" class="btn-primary">Import Playlist</button>
+          </form>
+        </div>
+
+        <!-- Twitter/X -->
+        <div id="import-twitter" class="import-section">
+          <div class="instructions">
+            <strong>📋 Step 1 — Create a Twitter Developer App (once):</strong><br>
+            Go to <em>developer.twitter.com</em> → Create project → Create App → Keys and Tokens → copy the <strong>Bearer Token</strong>.<br>
+            Paste it in <strong>⚙ Settings</strong> → Twitter Bearer Token.<br><br>
+            <strong>📋 Step 2 — Import liked tweets:</strong><br>
+            Enter your Twitter/X username (without @) and click Import. This will pull all tweets you have liked.
+          </div>
+          <form id="twitter-form">
+            <div class="input-group">
+              <label>Twitter username (without @)</label>
+              <input id="tw-username" type="text" placeholder="e.g. elonmusk">
+            </div>
+            <div class="input-group" style="margin-bottom:0">
+              <label>Bearer Token <span style="color:var(--muted)">(optional — overrides Settings key)</span></label>
+              <input id="tw-bearer" type="password" placeholder="AAAA…">
+            </div>
+            <br>
+            <button type="submit" class="btn-primary">Import Liked Tweets</button>
+          </form>
+        </div>
+
+        <!-- Reddit -->
+        <div id="import-reddit" class="import-section">
+          <div class="instructions">
+            <strong>📋 Step 1 — Create a Reddit App (once):</strong><br>
+            Go to <em>reddit.com/prefs/apps</em> → Create app → select <strong>script</strong> → fill in name and redirect (anything) → Create.<br>
+            Copy the <strong>client ID</strong> (under the app name) and <strong>client secret</strong>.<br>
+            Paste them in <strong>⚙ Settings</strong> → Reddit.<br><br>
+            <strong>📋 Step 2 — Import saved posts:</strong><br>
+            Enter your Reddit username and password. This will pull all posts and comments you have saved.
+          </div>
+          <form id="reddit-form">
+            <div class="input-group">
+              <label>Reddit username</label>
+              <input id="reddit-username" type="text" placeholder="e.g. spez">
+            </div>
+            <div class="input-group" style="margin-bottom:0">
+              <label>Reddit password</label>
+              <input id="reddit-password" type="password" placeholder="your Reddit password">
+            </div>
+            <br>
+            <button type="submit" class="btn-primary">Import Saved Posts</button>
+          </form>
+        </div>
+
+        <!-- LinkedIn -->
+        <div id="import-linkedin" class="import-section">
+          <div class="instructions">
+            <strong>📋 How to export from LinkedIn:</strong><br>
+            LinkedIn → Me → Settings &amp; Privacy → Data Privacy → Get a copy of your data → Select "Posts" and "Articles" → Request archive → Download ZIP (usually arrives by email within 10 min).<br>
+            Upload the ZIP here — articles, posts, and saved content will be imported.
+          </div>
+          <form id="li-form">
+            <div id="li-drop" class="drop-zone">
+              <input id="li-file" type="file" hidden accept=".zip,.csv,.json">
+              <div class="icon">📁</div>
+              <div class="drop-label">Drop LinkedIn export ZIP (or CSV/JSON) here, or click to browse</div>
+            </div>
+            <br>
+            <button type="submit" class="btn-primary">Import</button>
+          </form>
+        </div>
+
+        <!-- Photos -->
+        <div id="import-photos" class="import-section">
+          <div class="instructions">
+            <strong>📋 How to get iPhone photos to your computer:</strong><br>
+            • <strong>iCloud:</strong> icloud.com → Photos → select photos → download<br>
+            • <strong>USB:</strong> Connect iPhone → File Explorer → iPhone → Internal Storage → DCIM<br>
+            • <strong>Email/WhatsApp:</strong> Send photos to yourself<br><br>
+            Claude will read each image and extract / summarize the knowledge in it (great for screenshots of articles, notes, whiteboards).
+          </div>
+          <form id="photo-form">
+            <div id="photo-drop" class="drop-zone">
+              <input id="photo-files" type="file" hidden accept=".jpg,.jpeg,.png,.webp,.gif" multiple>
+              <div class="icon">📷</div>
+              <div class="drop-label">Drop photos here, or click to browse (JPG, PNG, WebP)</div>
+            </div>
+            <br>
+            <button type="submit" class="btn-primary">Upload &amp; Analyze</button>
+          </form>
+        </div>
+
+        <!-- ChatGPT -->
+        <div id="import-chatgpt" class="import-section">
+          <div class="instructions">
+            <strong>📋 How to export from ChatGPT:</strong><br>
+            ChatGPT → your avatar (top-right) → Settings → Data Controls → Export data → Confirm → Wait for email → Download ZIP.<br>
+            Upload the ZIP or the <code>conversations.json</code> file inside it.
+          </div>
+          <form id="gpt-form">
+            <div id="gpt-drop" class="drop-zone">
+              <input id="gpt-file" type="file" hidden accept=".zip,.json">
+              <div class="icon">💬</div>
+              <div class="drop-label">Drop ChatGPT export ZIP or conversations.json here</div>
+            </div>
+            <br>
+            <button type="submit" class="btn-primary">Import</button>
+          </form>
+        </div>
+
+        <!-- Claude -->
+        <div id="import-claude" class="import-section">
+          <div class="instructions">
+            <strong>📋 How to export from Claude:</strong><br>
+            claude.ai → your avatar → Settings → Privacy → Export data → Download.<br>
+            Upload the ZIP or JSON file here.
+          </div>
+          <form id="claude-form">
+            <div id="claude-drop" class="drop-zone">
+              <input id="claude-file" type="file" hidden accept=".zip,.json">
+              <div class="icon">✦</div>
+              <div class="drop-label">Drop Claude export ZIP or JSON here</div>
+            </div>
+            <br>
+            <button type="submit" class="btn-primary">Import</button>
+          </form>
+        </div>
+
+        <!-- Manual Entry -->
+        <div id="import-manual" class="import-section">
+          <div class="instructions">
+            <strong>✏ Add any piece of knowledge manually:</strong><br>
+            Paste an article, quote, note, or link. Claude will summarize and categorize it automatically.<br>
+            You can also upload a single image (screenshot, photo, whiteboard).
+          </div>
+          <div class="manual-tabs">
+            <button class="manual-tab active" data-mtab="text">📝 Text / Link</button>
+            <button class="manual-tab" data-mtab="image">🖼 Image</button>
+          </div>
+          <div id="manual-text-section" style="margin-top:12px">
+            <form id="manual-form">
+              <div class="input-group">
+                <label>Title <span style="color:var(--accent)">*</span></label>
+                <input id="manual-title" type="text" placeholder="e.g. Why sleep is critical for memory">
+              </div>
+              <div class="input-group">
+                <label>Content <span style="color:var(--muted)">(paste article text, notes, or a summary)</span></label>
+                <textarea id="manual-content" rows="5" placeholder="Paste text here…" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:13px;resize:vertical;outline:none;font-family:inherit"></textarea>
+              </div>
+              <div class="input-group" style="margin-bottom:0">
+                <label>Source URL <span style="color:var(--muted)">(optional)</span></label>
+                <input id="manual-url" type="text" placeholder="https://…">
+              </div>
+              <br>
+              <button type="submit" class="btn-primary">Add &amp; Analyze</button>
+            </form>
+          </div>
+          <div id="manual-image-section" style="margin-top:12px;display:none">
+            <form id="manual-image-form">
+              <div id="manual-img-drop" class="drop-zone">
+                <input id="manual-img-file" type="file" hidden accept=".jpg,.jpeg,.png,.webp,.gif">
+                <div class="icon">🖼</div>
+                <div class="drop-label">Drop an image here, or click to browse</div>
+              </div>
+              <br>
+              <button type="submit" class="btn-primary">Upload &amp; Analyze</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="main-toolbar">
+      <span id="resultCount" style="color:var(--muted);font-size:13px"></span>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <div class="view-toggle">
+          <button class="btn-ghost btn-sm active" id="btnGrid" onclick="setView('grid')">⊞ Grid</button>
+          <button class="btn-ghost btn-sm" id="btnTimeline" onclick="setView('timeline')">☰ Timeline</button>
+        </div>
+        <select id="sortSelect" class="sort-select" onchange="setSort(this.value)">
+          <option value="imported">Recently imported</option>
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid / Timeline -->
+    <div id="grid" class="grid"></div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+
+  </main>
+</div>
+
+<!-- Item detail modal -->
+<div class="modal-overlay hidden" id="itemModal">
+  <div class="modal">
+    <div class="modal-header">
+      <img id="modalThumb" style="width:64px;height:64px;border-radius:8px;object-fit:cover;display:none" alt="">
+      <div>
+        <div id="modalTitle" style="font-size:18px;font-weight:700;margin-bottom:4px"></div>
+        <div id="modalSource" style="font-size:12px;color:var(--muted)"></div>
+      </div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <span id="modalDomain" class="card-domain"></span>
+    <div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600">AI SUMMARY</div>
+      <p id="modalSummary" style="font-size:14px;line-height:1.6"></p>
+    </div>
+    <div id="modalTags" class="card-tags"></div>
+    <div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600">CONTENT PREVIEW</div>
+      <pre id="modalContent" style="font-size:12px;color:var(--muted);white-space:pre-wrap;max-height:200px;overflow-y:auto;background:var(--surface2);padding:12px;border-radius:8px"></pre>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a id="modalLink" href="#" target="_blank" class="btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">Open source ↗</a>
+      <button id="modalAnalyze" class="btn-ghost">✨ AI Summarize</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="modal-overlay hidden" id="settingsModal">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <div style="font-size:18px;font-weight:700">⚙ Settings</div>
+      <button class="modal-close" onclick="document.getElementById('settingsModal').classList.add('hidden')">✕</button>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);background:var(--surface2);padding:10px 14px;border-radius:8px;line-height:1.7">
+      Enter API keys for the services you want to use. Keys are saved locally on your computer — never sent anywhere except to the respective service.
+    </div>
+
+    <div class="input-group">
+      <label>Anthropic API Key <span style="color:var(--accent)">*</span> <span style="color:var(--muted);font-weight:400">(required for AI summaries)</span></label>
+      <input id="settingAnthropicKey" type="password" placeholder="sk-ant-api03-…">
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">
+        Get at: <strong>console.anthropic.com</strong> → API Keys → Create Key
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>YouTube API Key <span style="color:var(--muted);font-weight:400">(required for YouTube import &amp; playlist browser)</span></label>
+      <input id="settingYoutubeKey" type="password" placeholder="AIza…">
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">
+        Get at: console.cloud.google.com → APIs &amp; Services → YouTube Data API v3 → Credentials
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>OpenAI API Key <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+      <input id="settingOpenAIKey" type="password" placeholder="sk-…">
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Get at: platform.openai.com → API Keys</div>
+    </div>
+
+    <div class="input-group">
+      <label>Twitter/X Bearer Token <span style="color:var(--muted);font-weight:400">(for liked tweets import)</span></label>
+      <input id="settingTwitterToken" type="password" placeholder="AAAA…">
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Get at: developer.twitter.com → your App → Keys and Tokens</div>
+    </div>
+
+    <div class="input-group">
+      <label>Reddit Client ID &amp; Secret <span style="color:var(--muted);font-weight:400">(for saved posts import)</span></label>
+      <div style="display:flex;gap:8px">
+        <input id="settingRedditClientId" type="text" placeholder="client_id" style="flex:1">
+        <input id="settingRedditSecret" type="password" placeholder="client_secret" style="flex:1">
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Get at: reddit.com/prefs/apps → Create app (type: script)</div>
+    </div>
+
+    <div id="settingStatus" style="font-size:13px;padding:8px 0"></div>
+
+    <button class="btn-primary" onclick="saveSettings()" style="width:100%">💾 Save Settings</button>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toasts"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
